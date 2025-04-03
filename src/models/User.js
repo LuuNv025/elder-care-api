@@ -1,48 +1,23 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
+const Schema = mongoose.Schema;
 
-const UserSchema = new mongoose.Schema({
-    username: {
-        type: String,
-        unique: true,
-        required: true
-    },
-    email: {
-        type: String,
-        unique: true,
-        required: true
-    },
-    phone: {
-        type: String,
-        required: true
-    },
-    password: {
-        type: String,
-        required: true
-    },
+const userSchema = new Schema({
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
     role: {
         type: String,
-        enum: ['customer', 'nurse', 'admin'],
-        required: true
+        enum: ["family_member", "nurse", "admin"],
+        default: "family_member"
     },
-    profile: {
-        fullName: String,
-        avatar: String,
-        address: String,
-        dateOfBirth: Date,
-        gender: String,
-        identificationNumber: String
-    },
-    status: {
-        type: String,
-        enum: ['active', 'inactive', 'blocked'],
-        default: 'active'
-    },
-    verificationStatus: {
-        isVerified: { type: Boolean, default: false },
-        verificationDocuments: [String]
-    }
-});
+    phone: { type: String, required: true },
+    // Chỉ áp dụng cho family_member
+    profiles: [{
+        type: Schema.Types.ObjectId,
+        ref: "Profile",
+        required: function () { return this.role === "family_member"; }
+    }]
+}, { timestamps: true });
 
-const User = mongoose.model('User', UserSchema);
+const User = mongoose.model("User", userSchema);
 
-module.exports = User;
+export default User

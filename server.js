@@ -5,6 +5,8 @@ import connectDB from "./src/config/connectDB.js";
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import morgan from 'morgan';
+import AuthRouter from './src/routes/authRouter.js';
+
 
 
 const app = express();
@@ -27,6 +29,9 @@ app.use(morgan('common'));
 app.get('/', (req, res) => {
     res.send('Welcome to Elder Care Backend!hhh');
 });
+
+// use routes
+app.use('.api/v1/auth', AuthRouter)
 
 const port = process.env.SERVER_PORT || 8080;
 const listener = app.listen(port, () => {

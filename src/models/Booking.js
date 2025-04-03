@@ -1,46 +1,20 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
-const BookingSchema = new mongoose.Schema({
-  customer: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'User',
-    required: true
-  },
-  nurse: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'Nurse',
-    required: true
-  },
-  serviceType: {
-    type: String,
-    enum: [
-      'medical_care', 
-      'daily_living_support', 
-      'mental_support', 
-      'medication_reminder',
-      'physical_therapy'
-    ],
-    required: true
-  },
+const bookingSchema = new Schema({
+  profileId: { type: Schema.Types.ObjectId, ref: "Profile", required: true },
+  nurseId: { type: Schema.Types.ObjectId, ref: "Nurse", required: true },
+  serviceId: { type: Schema.Types.ObjectId, ref: "Service", required: true },
+  startTime: { type: Date, required: true },
+  endTime: { type: Date, required: true },
   status: {
     type: String,
-    enum: [
-      'pending', 
-      'accepted', 
-      'rejected', 
-      'in_progress', 
-      'completed', 
-      'cancelled'
-    ],
-    default: 'pending'
+    enum: ["pending", "confirmed", "completed", "cancelled"],
+    default: "pending"
   },
-  startTime: Date,
-  endTime: Date,
-  totalHours: Number,
-  totalCost: Number,
-  specialRequirements: String,
-  nurseRemarks: String,
-  customerRemarks: String
-});
+  notes: String,
+  paymentId: { type: Schema.Types.ObjectId, ref: "Payment" },
+  scheduleId: { type: Schema.Types.ObjectId, ref: "Schedule" }
+}, { timestamps: true });
 
-module.exports = mongoose.model('Booking', BookingSchema);
+module.exports = mongoose.model("Booking", bookingSchema);

@@ -1,8 +1,8 @@
 require('dotenv').config()
 const User = require('../models/User')
-import bcryptjs from 'bcryptjs'
+import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken'
-import * as authService from '../services/auth'
+// import * as authService from '../services/auth'
 const axios = require('axios');
 
 const authController = {
@@ -26,28 +26,6 @@ const authController = {
             res.status(200).json({
                 message: "Thêm user thành công",
                 savedUser
-            })
-        } catch (error) {
-            res.status(500).json(error)
-        }
-    },
-
-    // GET ALL USER
-    getAllUser: async (req, res) => {
-        try {
-            const getUser = await User.find()
-            res.status(200).json(getUser)
-        } catch (error) {
-            res.status(500).json(error)
-        }
-    },
-
-    // DELETE ALL USER 
-    deleteAllUser: async (req, res) => {
-        try {
-            const deleteUser = await User.deleteMany()
-            res.status(200).json({
-                message: "Xóa tất cả user thành công!"
             })
         } catch (error) {
             res.status(500).json(error)
@@ -94,38 +72,6 @@ const authController = {
             res.status(500).json({ message: "Lỗi server, vui lòng thử lại", error: error.message });
         }
     },
-
-    getDashboard: async (req, res) => {
-        res.json({
-            msg: `Chao mung ${req.user._id} den voi dashboard`,
-            user: req.user
-        })
-    },
-
-    getUserInfo: async (req, res) => {
-        const { access_token } = req.body; // Lấy access_token từ body của request
-
-        if (!access_token) {
-            return res.status(400).json({ error: 'Access token is required' });
-        }
-
-        try {
-            const response = await axios.get('https://www.googleapis.com/oauth2/v1/userinfo', {
-                headers: {
-                    Authorization: `Bearer ${access_token}`,
-                },
-            });
-
-            const userInfo = response.data; // Lấy thông tin user từ Google API
-            res.status(200).json(userInfo); // Trả về thông tin user
-        } catch (error) {
-            console.error('Error fetching user info:', error.response ? error.response.data : error.message);
-            res.status(500).json({
-                error: 'Failed to fetch user info',
-                details: error.response ? error.response.data : error.message,
-            });
-        }
-    }
 }
 
-module.exports = authController
+module.exports = authController;
